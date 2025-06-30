@@ -8,6 +8,7 @@ interface NetflixLoaderProps {
 export const NetflixLoader: React.FC<NetflixLoaderProps> = ({ onComplete }) => {
   const [showN, setShowN] = useState(false);
   const [showFullName, setShowFullName] = useState(false);
+  const [showBackground, setShowBackground] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
@@ -20,24 +21,43 @@ export const NetflixLoader: React.FC<NetflixLoaderProps> = ({ onComplete }) => {
     }, 1500);
 
     const timer3 = setTimeout(() => {
-      setFadeOut(true);
-    }, 3000);
+      setShowBackground(true);
+    }, 2200);
 
     const timer4 = setTimeout(() => {
-      onComplete();
+      setFadeOut(true);
     }, 3500);
+
+    const timer5 = setTimeout(() => {
+      onComplete();
+    }, 4000);
 
     return () => {
       clearTimeout(timer1);
       clearTimeout(timer2);
       clearTimeout(timer3);
       clearTimeout(timer4);
+      clearTimeout(timer5);
     };
   }, [onComplete]);
 
   return (
     <div className={`fixed inset-0 z-50 bg-black flex items-center justify-center transition-opacity duration-500 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}>
-      <div className="text-center">
+      {/* Background Image */}
+      {showBackground && (
+        <div 
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000 opacity-20"
+          style={{
+            backgroundImage: 'url(/placeholder.svg)',
+            filter: 'blur(8px) brightness(0.3)',
+          }}
+        />
+      )}
+      
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/70" />
+      
+      <div className="relative z-10 text-center">
         {/* N Animation with Netflix-style colors */}
         <div className={`transition-all duration-700 ${showN ? 'scale-100 opacity-100' : 'scale-50 opacity-0'}`}>
           <div className="text-8xl md:text-9xl font-bold text-red-600 mb-4 animate-pulse drop-shadow-2xl" style={{
