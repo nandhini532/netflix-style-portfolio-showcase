@@ -58,14 +58,12 @@ export const ResumeSection = () => {
                   className="hidden"
                   id="resume-upload"
                 />
-                <label htmlFor="resume-upload">
-                  <Button 
-                    as="div"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                  >
-                    <Upload size={20} className="mr-2" />
-                    {resumeFile ? `Uploaded: ${resumeFile.name}` : 'Upload Resume PDF'}
-                  </Button>
+                <label 
+                  htmlFor="resume-upload"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white cursor-pointer inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2"
+                >
+                  <Upload size={20} className="mr-2" />
+                  {resumeFile ? `Uploaded: ${resumeFile.name}` : 'Upload Resume PDF'}
                 </label>
               </div>
 
