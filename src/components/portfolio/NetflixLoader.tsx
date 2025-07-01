@@ -12,23 +12,30 @@ export const NetflixLoader: React.FC<NetflixLoaderProps> = ({ onComplete }) => {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
+    console.log('NetflixLoader mounted');
+    
     const timer1 = setTimeout(() => {
+      console.log('Showing N');
       setShowN(true);
     }, 300);
 
     const timer2 = setTimeout(() => {
+      console.log('Showing background image');
       setShowBackground(true);
     }, 1200);
 
     const timer3 = setTimeout(() => {
+      console.log('Showing full name');
       setShowFullName(true);
     }, 2000);
 
     const timer4 = setTimeout(() => {
+      console.log('Starting fade out');
       setFadeOut(true);
     }, 4000);
 
     const timer5 = setTimeout(() => {
+      console.log('Completing loader');
       onComplete();
     }, 4500);
 
@@ -51,6 +58,8 @@ export const NetflixLoader: React.FC<NetflixLoaderProps> = ({ onComplete }) => {
             backgroundImage: 'url(/lovable-uploads/a68371e2-cefe-4032-8d9b-b68ca0aa0c4f.png)',
             filter: 'blur(10px) brightness(0.4)',
           }}
+          onLoad={() => console.log('Background image loaded')}
+          onError={() => console.log('Background image failed to load')}
         />
       )}
       

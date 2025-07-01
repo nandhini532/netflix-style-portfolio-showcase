@@ -6,6 +6,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { FileText, Download, ExternalLink } from 'lucide-react';
 
 export const ResumeSection = () => {
+  const handleDownload = () => {
+    // Try to download the resume - update this path once you upload your resume
+    const link = document.createElement('a');
+    link.href = '/nandhini-resume.pdf'; // Update this path to match your uploaded resume
+    link.download = 'Nandhini_Medharametla_Resume.pdf';
+    link.click();
+  };
+
   return (
     <section id="resume" className="py-20 px-4 bg-black">
       <div className="max-w-4xl mx-auto text-center">
@@ -82,7 +90,11 @@ export const ResumeSection = () => {
                 </DialogContent>
               </Dialog>
               
-              <Button variant="outline" className="w-full text-white border-white hover:bg-white hover:text-black">
+              <Button 
+                onClick={handleDownload}
+                variant="outline" 
+                className="w-full text-white border-white hover:bg-white hover:text-black"
+              >
                 <Download size={20} className="mr-2" />
                 Download PDF
               </Button>
