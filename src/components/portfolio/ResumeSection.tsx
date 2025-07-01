@@ -3,15 +3,33 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { FileText, Download, ExternalLink } from 'lucide-react';
+import { FileText, Download, Upload } from 'lucide-react';
 
 export const ResumeSection = () => {
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      setResumeFile(file);
+      const url = URL.createObjectURL(file);
+      setResumeUrl(url);
+      console.log('Resume uploaded:', file.name);
+    } else {
+      alert('Please upload a PDF file only');
+    }
+  };
+
   const handleDownload = () => {
-    // Try to download the resume - update this path once you upload your resume
-    const link = document.createElement('a');
-    link.href = '/nandhini-resume.pdf'; // Update this path to match your uploaded resume
-    link.download = 'Nandhini_Medharametla_Resume.pdf';
-    link.click();
+    if (resumeFile && resumeUrl) {
+      const link = document.createElement('a');
+      link.href = resumeUrl;
+      link.download = resumeFile.name;
+      link.click();
+    } else {
+      alert('Please upload your resume first');
+    }
   };
 
   return (
@@ -31,73 +49,59 @@ export const ResumeSection = () => {
             </p>
             
             <div className="space-y-3">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
-                    <FileText size={20} className="mr-2" />
-                    View Resume
+              {/* File Upload */}
+              <div className="mb-4">
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  id="resume-upload"
+                />
+                <label htmlFor="resume-upload">
+                  <Button 
+                    as="div"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
+                  >
+                    <Upload size={20} className="mr-2" />
+                    {resumeFile ? `Uploaded: ${resumeFile.name}` : 'Upload Resume PDF'}
                   </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl h-[80vh] bg-gray-900 border-gray-700">
-                  <DialogHeader>
-                    <DialogTitle className="text-white">Resume - Nandhini Medharametla</DialogTitle>
-                  </DialogHeader>
-                  <div className="flex-1 bg-white rounded-lg p-8 overflow-y-auto">
-                    <div className="text-black">
-                      <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold mb-2">Nandhini Medharametla</h1>
-                        <p className="text-lg text-gray-600">Web Developer | Creative Thinker | Tech Enthusiast</p>
-                        <p className="text-gray-600">nandinichowdary532@gmail.com</p>
+                </label>
+              </div>
+
+              {resumeFile && resumeUrl && (
+                <>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
+                        <FileText size={20} className="mr-2" />
+                        View Resume
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl h-[80vh] bg-gray-900 border-gray-700">
+                      <DialogHeader>
+                        <DialogTitle className="text-white">Resume - Nandhini Medharametla</DialogTitle>
+                      </DialogHeader>
+                      <div className="flex-1 bg-white rounded-lg overflow-hidden">
+                        <iframe
+                          src={resumeUrl}
+                          className="w-full h-full"
+                          title="Resume PDF Viewer"
+                        />
                       </div>
-                      
-                      <div className="mb-6">
-                        <h2 className="text-xl font-bold mb-3 border-b-2 border-red-500">Education</h2>
-                        <div className="mb-3">
-                          <h3 className="font-semibold">B.Tech Computer Science & Engineering</h3>
-                          <p className="text-gray-600">GITAM University (2020-2024) - CGPA: 8.5/10</p>
-                        </div>
-                      </div>
-                      
-                      <div className="mb-6">
-                        <h2 className="text-xl font-bold mb-3 border-b-2 border-red-500">Skills</h2>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <h3 className="font-semibold">Programming:</h3>
-                            <p className="text-gray-600">C, Java, Python, JavaScript, SQL</p>
-                          </div>
-                          <div>
-                            <h3 className="font-semibold">Web Technologies:</h3>
-                            <p className="text-gray-600">HTML, CSS, React, Node.js</p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="mb-6">
-                        <h2 className="text-xl font-bold mb-3 border-b-2 border-red-500">Projects</h2>
-                        <div className="space-y-3">
-                          <div>
-                            <h3 className="font-semibold">Recipe Recommendation System</h3>
-                            <p className="text-gray-600">AI-powered recipe suggestions using Python and Machine Learning</p>
-                          </div>
-                          <div>
-                            <h3 className="font-semibold">Email Filtering Bot</h3>
-                            <p className="text-gray-600">Intelligent email classification system using NLP and TensorFlow</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              
-              <Button 
-                onClick={handleDownload}
-                variant="outline" 
-                className="w-full text-white border-white hover:bg-white hover:text-black"
-              >
-                <Download size={20} className="mr-2" />
-                Download PDF
-              </Button>
+                    </DialogContent>
+                  </Dialog>
+                  
+                  <Button 
+                    onClick={handleDownload}
+                    variant="outline" 
+                    className="w-full text-white border-white hover:bg-white hover:text-black"
+                  >
+                    <Download size={20} className="mr-2" />
+                    Download PDF
+                  </Button>
+                </>
+              )}
             </div>
           </CardContent>
         </Card>
